@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentIQ - Test de Fortalezas Profesionales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .logo-text {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .logo-tagline {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .option:hover {
+            background: #ebebeb;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-prev {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-prev:hover {
+            background: #ebebeb;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-title {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .result-description {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .result-careers {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .result-careers strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-careers p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .share-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .share-title {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0;
+        }
+
+        .share-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .share-btn.whatsapp {
+            background: #25D366;
+        }
+
+        .share-btn.whatsapp:hover {
+            background: #20BA5A;
+        }
+
+        .share-btn.email {
+            background: #EA4335;
+        }
+
+        .share-btn.email:hover {
+            background: #D23B2E;
+        }
+
+        .print-btn {
+            background: #666;
+        }
+
+        .print-btn:hover {
+            background: #555;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .share-section, .restart-btn, .nav-buttons {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <div class="logo-text">TalentIQ</div>
+            <div class="logo-tagline">Descubre tu potencial</div>
+        </div>
+        
+        <h1>Test de Fortalezas Profesionales</h1>
+        <p class="subtitle">Descubre tus talentos naturales y cómo aplicarlos en tu carrera</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="quizContent"></div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-description" id="resultDescription"></div>
+            <div class="result-careers" id="resultCareers"></div>
+            
+            <div class="share-section">
+                <div class="share-title">Compartir este test</div>
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+                        📱 WhatsApp
+                    </button>
+                    <button class="share-btn email" onclick="shareEmail()">
+                        📧 Email
+                    </button>
+                    <button class="share-btn print-btn" onclick="window.print()">
+                        🖨️ Imprimir
+                    </button>
+                </div>
+            </div>
+
+            <button class="restart-btn" onclick="restartQuiz()">Realizar el test de nuevo</button>
+        </div>
+
+        <div class="nav-buttons" id="navButtons">
+            <button class="btn-prev" onclick="previousQuestion()" id="prevBtn" style="display: none;">Anterior</button>
+            <button class="btn-next" onclick="nextQuestion()" id="nextBtn" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "¿Qué te emociona más al comenzar un proyecto nuevo?",
+                options: [
+                    { text: "La fase de lluvia de ideas y la posibilidad de crear algo totalmente original.", value: "A" },
+                    { text: "Conectar con el equipo y entender cómo el proyecto impactará a las personas.", value: "B" },
+                    { text: "Desglosar la meta en un plan detallado, con pasos claros y fechas límite.", value: "C" },
+                    { text: "La investigación inicial y el análisis de datos para fundamentar cada decisión.", value: "D" },
+                    { text: "El momento de poner manos a la obra y ver el resultado tangible de mi trabajo.", value: "E" },
+                    { text: "Coordinar a los miembros del equipo y asegurar que todos trabajen en sintonía.", value: "F" }
+                ]
+            },
+            {
+                question: "En una reunión de equipo, tu rol habitual es...",
+                options: [
+                    { text: "Aportar ideas audaces y pensar \"fuera de la caja\".", value: "A" },
+                    { text: "Escuchar a todos, mediar en desacuerdos y mantener un ambiente positivo.", value: "B" },
+                    { text: "Asegurarte de que la agenda se cumpla y que las notas de la reunión estén bien organizadas.", value: "C" },
+                    { text: "Hacer preguntas críticas para descubrir suposiciones y llegar a la raíz de los problemas.", value: "D" },
+                    { text: "Ofrecerte voluntariamente para las tareas más prácticas y directas.", value: "E" },
+                    { text: "Tomar la iniciativa para definir los objetivos y la dirección del grupo.", value: "F" }
+                ]
+            },
+            {
+                question: "Cuando un problema inesperado surge, tu primera reacción es...",
+                options: [
+                    { text: "Buscar una solución innovadora o un enfoque que nadie ha considerado.", value: "A" },
+                    { text: "Preguntar cómo se sienten los involucrados y ofrecer apoyo emocional.", value: "B" },
+                    { text: "Reorganizar el plan de acción actual para adaptarse a la nueva situación.", value: "C" },
+                    { text: "Sumirte en la investigación para entender la causa profunda del problema.", value: "D" },
+                    { text: "Ir directamente al \"foco del problema\" para intentar arreglarlo con tus propias manos.", value: "E" },
+                    { text: "Reunir al equipo, motivarlos y asignar nuevas responsabilidades para superarlo.", value: "F" }
+                ]
+            },
+            {
+                question: "¿Qué tipo de tarea encuentras más satisfactoria?",
+                options: [
+                    { text: "El proceso creativo de diseñar un concepto o producto desde cero.", value: "A" },
+                    { text: "Ver cómo tu apoyo y empatía mejoran la situación de alguien.", value: "B" },
+                    { text: "Organizar un sistema de trabajo o un espacio para que funcione de manera óptima.", value: "C" },
+                    { text: "Descifrar un acertijo complejo o resolver un problema lógico y estructurado.", value: "D" },
+                    { text: "Construir, armar o montar algo, disfrutando el trabajo físico del proceso.", value: "E" },
+                    { text: "Liderar a un grupo hacia el logro de un objetivo común y ambicioso.", value: "F" }
+                ]
+            },
+            {
+                question: "¿Qué elogio te hace sentir más valorado en el trabajo?",
+                options: [
+                    { text: "\"¡Tu visión y creatividad son únicas!\"", value: "A" },
+                    { text: "\"Eres una persona muy comprensiva y un pilar para el equipo.\"", value: "B" },
+                    { text: "\"Gracias por tu increíble organización y atención al detalle.\"", value: "C" },
+                    { text: "\"Tienes una mente analítica impresionante.\"", value: "D" },
+                    { text: "\"Eres muy hábil con las manos.\"", value: "E" },
+                    { text: "\"Tienes un talento natural para liderar y motivar a los demás.\"", value: "F" }
+                ]
+            },
+            {
+                question: "Si tuvieras que elegir un nuevo desafío, ¿cuál preferirías?",
+                options: [
+                    { text: "Diseñar una campaña de marketing que rompa todos los esquemas.", value: "A" },
+                    { text: "Ser mediador en un conflicto importante dentro de la empresa.", value: "B" },
+                    { text: "Planificar y ejecutar un evento masivo sin errores.", value: "C" },
+                    { text: "Realizar un análisis de mercado para identificar una nueva oportunidad de negocio.", value: "D" },
+                    { text: "Construir un prototipo funcional para un nuevo producto.", value: "E" },
+                    { text: "Dirigir un equipo de alto rendimiento para alcanzar una meta muy difícil.", value: "F" }
+                ]
+            },
+            {
+                question: "¿Cómo te sientes más cómodo tomando decisiones importantes?",
+                options: [
+                    { text: "Con una corazonada o una intuición fuerte que te guía.", value: "A" },
+                    { text: "Después de hablar con las personas involucradas y entender sus perspectivas.", value: "B" },
+                    { text: "Siguiendo un protocolo o una serie de pasos lógicos y establecidos.", value: "C" },
+                    { text: "Una vez que has recopilado y analizado toda la información relevante.", value: "D" },
+                    { text: "Prefieres decidir rápidamente para pasar a la acción.", value: "E" },
+                    { text: "Consultando con tu equipo para construir un consenso.", value: "F" }
+                ]
+            },
+            {
+                question: "En tu tiempo libre, ¿qué actividad te atrae más?",
+                options: [
+                    { text: "Leer sobre nuevas tendencias y aprender algo totalmente nuevo.", value: "A" },
+                    { text: "Ser voluntario o ayudar a alguien en tu comunidad.", value: "B" },
+                    { text: "Limpiar y organizar tu espacio, o planificar tus vacaciones.", value: "C" },
+                    { text: "Resolver rompecabezas, jugar ajedrez o leer sobre temas científicos.", value: "D" },
+                    { text: "Arreglar un electrodoméstico, hacer manualidades o hacer ejercicio.", value: "E" },
+                    { text: "Organizar planes con tus amigos y familiares.", value: "F" }
+                ]
+            },
+            {
+                question: "Al aprender una nueva habilidad, prefieres...",
+                options: [
+                    { text: "Experimentar y probar diferentes enfoques por tu cuenta.", value: "A" },
+                    { text: "Aprender en un grupo, colaborando con otros.", value: "B" },
+                    { text: "Encontrar un manual o tutorial detallado y seguirlo paso a paso.", value: "C" },
+                    { text: "Estudiar la teoría y los principios detrás de la habilidad primero.", value: "D" },
+                    { text: "Lanzarte a la práctica directa para aprender haciendo.", value: "E" },
+                    { text: "Aprender para luego poder enseñárselo a alguien más.", value: "F" }
+                ]
+            },
+            {
+                question: "Cuando hay un desacuerdo en el equipo, tu instinto es...",
+                options: [
+                    { text: "Proponer una idea disruptiva que cambie el enfoque del problema.", value: "A" },
+                    { text: "Escuchar a ambas partes y ayudar a que encuentren un punto medio.", value: "B" },
+                    { text: "Pedir que todos se ciñan a los procedimientos establecidos.", value: "C" },
+                    { text: "Presentar datos o hechos objetivos para guiar la decisión.", value: "D" },
+                    { text: "Dejar que otros hablen y enfocarte en tu parte del trabajo.", value: "E" },
+                    { text: "Asumir el rol de mediador y guiar al equipo hacia un acuerdo.", value: "F" }
+                ]
+            },
+            {
+                question: "¿Qué aspecto valoras más en tu entorno de trabajo ideal?",
+                options: [
+                    { text: "La libertad de experimentar y la flexibilidad para ser creativo.", value: "A" },
+                    { text: "Un ambiente de apoyo mutuo y una cultura de equipo positiva.", value: "B" },
+                    { text: "Procesos claros y eficientes que mantengan todo en orden.", value: "C" },
+                    { text: "La toma de decisiones basada en la lógica y la evidencia.", value: "D" },
+                    { text: "La oportunidad de ver el impacto directo de tu esfuerzo.", value: "E" },
+                    { text: "La posibilidad de influir en las decisiones y la dirección del equipo.", value: "F" }
+                ]
+            },
+            {
+                question: "Al finalizar un proyecto, ¿qué te da la mayor satisfacción?",
+                options: [
+                    { text: "Que el resultado sea único y totalmente innovador.", value: "A" },
+                    { text: "Saber que el resultado ha beneficiado o hecho felices a las personas.", value: "B" },
+                    { text: "La sensación de haber seguido el plan a la perfección.", value: "C" },
+                    { text: "Confirmar que los resultados finales validan tu análisis inicial.", value: "D" },
+                    { text: "Tener el producto final en tus manos y sentir que es tuyo.", value: "E" },
+                    { text: "El orgullo de ver a tu equipo unido y celebrar el logro juntos.", value: "F" }
+                ]
+            }
+        ];
+
+        const results = {
+            A: {
+                title: "Tu fortaleza es la Innovación 💡",
+                description: "Eres un visionario con una creatividad sin límites.",
+                careers: "Marketing, Publicidad, Diseño de Productos (UX/UI), Investigación y Desarrollo, Emprendimiento o cualquier rol que requiera generar ideas nuevas y disruptivas."
+            },
+            B: {
+                title: "Tu fortaleza es la Empatía 🤝",
+                description: "Eres un conciliador que conecta y armoniza equipos.",
+                careers: "Recursos Humanos, Servicio al Cliente, Trabajo Social, Mediación, Coaching, o roles de liderazgo que se centren en el bienestar y la cohesión del equipo."
+            },
+            C: {
+                title: "Tu fortaleza es la Organización 📋",
+                description: "Eres un planificador que convierte el caos en orden.",
+                careers: "Gestión de Proyectos, Administración, Finanzas, Logística, Eventos o cualquier posición donde la planificación detallada y la estructura sean cruciales para el éxito."
+            },
+            D: {
+                title: "Tu fortaleza es el Análisis 🔍",
+                description: "Eres un solucionador de problemas que se basa en la lógica y la razón.",
+                careers: "Ciencia de Datos, Consultoría Estratégica, Ingeniería, Investigación de Mercados, Derecho o roles que exijan un pensamiento crítico y profundo."
+            },
+            E: {
+                title: "Tu fortaleza es la Ejecución 🔨",
+                description: "Eres un hacedor que prefiere la acción y los resultados tangibles.",
+                careers: "Oficios manuales (carpintería, electricidad), Desarrollo de Software, Producción, Construcción o cualquier campo donde el trabajo práctico y directo genere un producto o servicio final."
+            },
+            F: {
+                title: "Tu fortaleza es el Liderazgo 👑",
+                description: "Eres un impulsor que motiva y guía a otros hacia el éxito.",
+                careers: "Gerencia, Dirección de Equipos, Emprendimiento, Jefatura de Departamento, Coaching o cualquier posición donde tu función principal sea guiar a un grupo hacia una meta."
+            }
+        };
+
+        let currentQuestion = 0;
+        let answers = {};
+        const totalQuestions = questions.length;
+
+        function initQuiz() {
+            const quizContent = document.getElementById('quizContent');
+            quizContent.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                if (index === 0) questionDiv.classList.add('active');
+                questionDiv.dataset.question = index;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = `Pregunta ${index + 1} de ${totalQuestions}`;
+
+                const questionText = document.createElement('div');
+                questionText.className = 'question';
+                questionText.textContent = q.question;
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+
+                q.options.forEach(option => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    optionDiv.dataset.value = option.value;
+                    optionDiv.textContent = option.text;
+                    optionDiv.addEventListener('click', selectOption);
+                    optionsDiv.appendChild(optionDiv);
+                });
+
+                questionDiv.appendChild(questionNumber);
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(optionsDiv);
+                quizContent.appendChild(questionDiv);
+            });
+        }
+
+        function selectOption(e) {
+            const container = e.target.closest('.question-container');
+            container.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            e.target.classList.add('selected');
+            
+            const questionNum = parseInt(container.dataset.question);
+            answers[questionNum] = e.target.dataset.value;
+            
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                document.querySelectorAll('.question-container')[currentQuestion].classList.remove('active');
+                currentQuestion++;
+                document.querySelectorAll('.question-container')[currentQuestion].classList.add('active');
+                
+                document.getElementById('prevBtn').style.display = 'block';
+                document.getElementById('nextBtn').disabled = !answers.hasOwnProperty(currentQuestion);
+                
+                if (currentQuestion === totalQuestions - 1) {
+                    document.getElementById('nextBtn').textContent = 'Ver Resultados';
+                }
+                
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                document.querySelectorAll('.question-container')[currentQuestion].classList.remove('active');
+                currentQuestion--;
+                document.querySelectorAll('.question-container')[currentQuestion].classList.add('active');
+                
+                if (currentQuestion === 0) {
+                    document.getElementById('prevBtn').style.display = 'none';
+                }
+                
+                document.getElementById('nextBtn').textContent = 'Siguiente';
+                document.getElementById('nextBtn').disabled = !answers.hasOwnProperty(currentQuestion);
+                
+                updateProgress();
+            }
+        }
+
+        function showResults() {
+            const counts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+            const laterCounts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+            
+            Object.entries(answers).forEach(([questionNum, answer]) => {
+                counts[answer]++;
+                if (parseInt(questionNum) >= 6) {
+                    laterCounts[answer]++;
+                }
+            });
+            
+            const percentages = {};
+            Object.keys(counts).forEach(key => {
+                percentages[key] = (counts[key] / totalQuestions) * 100;
+            });
+            
+            const strongCandidates = Object.keys(percentages)
+                .filter(key => percentages[key] > 40);
+            
+            const topStrengths = strongCandidates.sort((a, b) => {
+                if (counts[b] !== counts[a]) {
+                    return counts[b] - counts[a];
+                }
+                return laterCounts[b] - laterCounts[a];
+            });
+            
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('navButtons').style.display = 'none';
+            document.getElementById('resultContainer').classList.add('active');
+            
+            if (topStrengths.length >= 2) {
+                const strength1 = topStrengths[0];
+                const strength2 = topStrengths[1];
+                
+                document.getElementById('resultTitle').textContent = 'Tus Fortalezas Principales';
+                document.getElementById('resultDescription').innerHTML = `
+                    <div style="margin-bottom: 25px;">
+                        <div style="font-size: 24px; color: #667eea; margin-bottom: 8px;">${results[strength1].title}</div>
+                        <div style="font-size: 16px; color: #333; margin-bottom: 15px;">${results[strength1].description}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 24px; color: #764ba2; margin-bottom: 8px;">${results[strength2].title}</div>
+                        <div style="font-size: 16px; color: #333;">${results[strength2].description}</div>
+                    </div>
+                `;
+                document.getElementById('resultCareers').innerHTML = `
+                    <strong>Podrías dedicarte a:</strong>
+                    <p style="margin-top: 10px;"><strong style="color: #667eea;">Primera fortaleza:</strong> ${results[strength1].careers}</p>
+                    <p style="margin-top: 10px;"><strong style="color: #764ba2;">Segunda fortaleza:</strong> ${results[strength2].careers}</p>
+                `;
+            } else {
+                const allSorted = Object.keys(counts).sort((a, b) => {
+                    if (counts[b] !== counts[a]) {
+                        return counts[b] - counts[a];
+                    }
+                    return laterCounts[b] - laterCounts[a];
+                });
+                const result = allSorted[0];
+                
+                document.getElementById('resultTitle').textContent = results[result].title;
+                document.getElementById('resultDescription').textContent = results[result].description;
+                document.getElementById('resultCareers').innerHTML = `<strong>Podrías dedicarte a:</strong><p>${results[result].careers}</p>`;
+            }
+            
+            document.getElementById('progressFill').style.width = '100%';
+        }
+
+        function shareWhatsApp() {
+            const text = encodeURIComponent('¡Descubre tus fortalezas profesionales con TalentIQ! Realiza este test y conoce tus talentos naturales.');
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+        }
+
+        function shareEmail() {
+            const subject = encodeURIComponent('Test TalentIQ - Descubre tus Fortalezas Profesionales');
+            const body = encodeURIComponent('Te invito a realizar este test para descubrir tus fortalezas profesionales:\n\n' + window.location.href);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            answers = {};
+            
+            document.getElementById('resultContainer').classList.remove('active');
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('navButtons').style.display = 'flex';
+            
+            document.querySelectorAll('.question-container').forEach((container, index) => {
+                container.classList.remove('active');
+                if (index === 0) container.classList.add('active');
+                container.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            });
+            
+            document.getElementById('prevBtn').style.display = 'none';
+            document.getElementById('nextBtn').textContent = 'Siguiente';
+            document.getElementById('nextBtn').disabled = true;
+            
+            updateProgress();
+        }
+
+        initQuiz();
+        updateProgress();
+    </script>
+</body>
+</html>
